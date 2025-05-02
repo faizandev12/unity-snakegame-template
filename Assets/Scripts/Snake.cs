@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Snake : MonoBehaviour
 {
+    private bool hasCrownedHead = false;
+
     public Transform segmentPrefab;
     public Vector2Int direction = Vector2Int.right;
     public float speed = 20f;
@@ -29,6 +31,10 @@ public class Snake : MonoBehaviour
     [Header("Snake Head Sprites")]
     public Sprite pinkHeadSprite;
     public Sprite blueHeadSprite;
+
+    [Header("Crowned Snake Head Sprites")]
+    public Sprite crownedPinkHeadSprite;
+    public Sprite crownedBlueHeadSprite;
 
     [Header("Snake Body Prefabs")]
     public Transform pinkBodyPrefab;
@@ -57,6 +63,21 @@ public class Snake : MonoBehaviour
 
     private void Update()
     {
+
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PlayerPrefs.DeleteKey("HighScore");
+            PlayerPrefs.Save();
+        }
+        // Only crown the snake if the current score exceeds the high score (and isn't the first time playing)
+        int previousHighScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (!hasCrownedHead && ScoreManager.Instance.CurrentScore >= previousHighScore)
+        {
+            hasCrownedHead = true;
+            UpdateToCrownedHead();
+        }
+
         // Only allow turning up or down while moving in the x-axis
         if (direction.x != 0f)
         {
@@ -125,6 +146,7 @@ public class Snake : MonoBehaviour
         direction = Vector2Int.right;
         transform.position = Vector3.zero;
         ScoreManager.Instance.ResetScore();
+        hasCrownedHead = false;
 
         // Start at 1 to skip destroying the head
         for (int i = 1; i < segments.Count; i++) {
@@ -138,6 +160,16 @@ public class Snake : MonoBehaviour
         // -1 since the head is already in the list
         for (int i = 0; i < initialSize - 1; i++) {
             Grow();
+        }
+        // Reset to default head sprite
+        int selected = PlayerPrefs.GetInt("SelectedSnake", 0);
+        if (selected == 0 && pinkHeadSprite != null)
+        {
+            GetComponent<SpriteRenderer>().sprite = pinkHeadSprite;
+        }
+        else if (selected == 1 && blueHeadSprite != null)
+        {
+            GetComponent<SpriteRenderer>().sprite = blueHeadSprite;
         }
     }
 
@@ -202,6 +234,47 @@ public class Snake : MonoBehaviour
         audioSource.PlayOneShot(clip); // Play the new sound
         yield return null; // Wait one frame to let the sound trigger
     }
+    private void UpdateToCrownedHead()
+    {
+        int selected = PlayerPrefs.GetInt("SelectedSnake", 0);
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
 
+        if (selected == 0 && crownedPinkHeadSprite != null)
+        {
+            sr.sprite = crownedPinkHeadSprite;
+        }
+        else if (selected == 1 && crownedBlueHeadSprite != null)
+        {
+            sr.sprite = crownedBlueHeadSprite;
+        }
+    }
+
+    /*
+    private void GameOver()
+    {
+        int currentScore = ScoreManager.Instance.CurrentScore;
+        int storedHighScore = PlayerPrefs.GetInt("HighScore", 0);
+
+        if (storedHighScore > 0 && currentScore > storedHighScore)
+        {
+            ShowKingCrown(); // Your logic to show crown/label
+        }
+        else
+        {
+            HideKingCrown();
+        }
+
+        // Update high score if needed
+        if (currentScore > storedHighScore)
+        {
+            PlayerPrefs.SetInt("HighScore", currentScore);
+            PlayerPrefs.Save();
+        }
+
+        // Now reset game or show UI
+        ResetState();
+    }
+
+    */
 
 }

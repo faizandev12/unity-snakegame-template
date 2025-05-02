@@ -11,6 +11,9 @@ public class ScoreManager : MonoBehaviour
     private int score = 0;
     private int highScore = 0;
 
+    public int CurrentScore => this.score;
+
+
 
     private void Awake()
     {

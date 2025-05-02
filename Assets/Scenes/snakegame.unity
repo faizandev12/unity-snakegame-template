@@ -1080,6 +1080,10 @@ MonoBehaviour:
   obstacleSound: {fileID: 8300000, guid: 3ac5c2d9968d2ff4793e69083fcfe885, type: 3}
   pinkHeadSprite: {fileID: 21300000, guid: 0e7ca3110faae7041b2e67aa040af2d9, type: 3}
   blueHeadSprite: {fileID: 21300000, guid: 82701695810f65a489bd6b8b3ec7985d, type: 3}
+  crownedPinkHeadSprite: {fileID: 21300000, guid: 403b9683bfb5b38418c1c3df06e51703,
+    type: 3}
+  crownedBlueHeadSprite: {fileID: 21300000, guid: ba0c03278e412ec408a1dd4c2f693bbc,
+    type: 3}
   pinkBodyPrefab: {fileID: 4726879341727194397, guid: 2c29bada0ae41c54bb64eb7482eb5b8d,
     type: 3}
   blueBodyPrefab: {fileID: 4726879341727194397, guid: 7769d219c359f644faa034c972b53f81,
